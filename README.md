@@ -34,6 +34,6 @@ returns
 
 ## Limitations
 
-For now, only POST requests are supported.
+For now, only POST requests are supported. See issue [#1](https://github.com/alecalve/c-lightning-http-rpc/issues/1)
 
-No authentication.
+No authentication. See issue [#2](https://github.com/alecalve/c-lightning-http-rpc/issues/2)
