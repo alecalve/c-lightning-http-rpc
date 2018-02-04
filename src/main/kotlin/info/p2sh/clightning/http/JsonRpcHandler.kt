@@ -57,7 +57,7 @@ class JsonRpcHandler constructor(
                 client.sendRequest(request)
             }
         } catch (exception: JsonParseException) {
-            JsonRpcResponse(1, null, JsonRpcError(-32700, "Parse error"))
+            JsonRpcResponse(null, null, JsonRpcError(-32700, "Parse error"))
         }
 
         exchange.responseHeaders.put(Headers.CONTENT_TYPE, contentType)

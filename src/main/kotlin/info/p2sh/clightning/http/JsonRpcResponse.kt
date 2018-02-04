@@ -21,7 +21,7 @@ package info.p2sh.clightning.http
  * See http://www.jsonrpc.org/specification#response_object
  */
 data class JsonRpcResponse(
-    val id: Any,
+    val id: Any?,
     val result: Any?,
     val error: JsonRpcError?,
     val jsonrpc: String = "2.0"
