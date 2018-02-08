@@ -22,6 +22,7 @@ import info.p2sh.clightning.rpc.RpcClient
 import io.undertow.server.HttpServerExchange
 import io.undertow.server.RoutingHandler
 import io.undertow.util.Headers
+import io.undertow.util.HttpString
 import java.io.InputStreamReader
 
 /**
@@ -61,6 +62,7 @@ class JsonRpcHandler constructor(
         }
 
         exchange.responseHeaders.put(Headers.CONTENT_TYPE, contentType)
+        exchange.responseHeaders.put(HttpString.tryFromString("Access-Control-Allow-Origin"), "*")
         exchange.statusCode = mapErrorToStatusCode(response.error)
 
         exchange.responseSender.send(gson.toJson(response))
