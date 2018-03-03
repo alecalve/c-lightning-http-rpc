@@ -17,6 +17,7 @@ limitations under the License.
 package info.p2sh.clightning.rpc
 
 import com.google.gson.Gson
+import com.google.gson.JsonParser
 import info.p2sh.clightning.http.JsonRpcError
 import info.p2sh.clightning.http.JsonRpcRequest
 import info.p2sh.clightning.http.JsonRpcResponse
@@ -29,6 +30,8 @@ import java.nio.CharBuffer
 import java.nio.channels.Channels
 
 class RpcClient(private val path: String, private val gson: Gson) {
+    private val jsonParser = JsonParser()
+
     fun sendRequest(request: JsonRpcRequest): JsonRpcResponse {
         val socketFile = File(path)
         val address = UnixSocketAddress(socketFile)
@@ -39,16 +42,23 @@ class RpcClient(private val path: String, private val gson: Gson) {
             it.flush()
 
             InputStreamReader(Channels.newInputStream(channel)).use {
-                val builder = StringBuilder()
+                var result = ""
+                var isValidJson = false
 
                 do {
-                    val result = CharBuffer.allocate(8192)
-                    it.read(result)
-                    result.flip()
-                    builder.append(result)
-                } while (result.length == 8192)
+                    val chunk = CharBuffer.allocate(8192)
+                    it.read(chunk)
+                    chunk.flip()
+                    result += chunk.toString()
 
-                builder.toString()
+                    try {
+                        jsonParser.parse(result)
+                        isValidJson = true
+                    } catch (e: Exception) {
+                    }
+                } while (chunk.isNotEmpty() && !isValidJson)
+
+                result
             }
         }
 
